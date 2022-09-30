@@ -1,7 +1,11 @@
 export default function Menu(props) {
   return (
-    <div>
-      <div onClick={props.menuTrigger}>{props.openMenu ? "✕" : "☰"}</div>
+    <div className="Menu">
+      <div className="Header">
+        <div className="User">Kuba</div>
+        <div onClick={props.menuTrigger}>{props.openMenu ? "✕" : "☰"}</div>
+      </div>
+      <div className="Breadcrumbs">Breadcrumbsy</div>
       {props.openMenu ? <MenuList choosePage={props.choosePage} /> : null}
     </div>
   );
