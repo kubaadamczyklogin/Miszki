@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [body, setBody] = useState(<p>Witaj</p>);
+  const [body, setBody] = useState(<Add />);
 
   function choosePage(page) {
     switch (page) {
