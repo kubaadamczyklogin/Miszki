@@ -22,7 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "less": "lessc src/less/menu.less src/css/menu.css"
+    "less": "lessc src/less/cardList.less src/css/cardList.css"
   },
   "browserslist": [
     ">0.2%",

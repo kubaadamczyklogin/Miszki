@@ -1,5 +1,26 @@
 @import "global.less";
 
-cardList {
+.cardList {
   background: @lightBlue;
+
+  .card {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+
+    .backward,
+    .forward {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 150px;
+      height: 150px;
+      border: 1px solid @darkGreen;
+      border-radius: 15px;
+      font-size: 15px;
+      color: @darkGreen;
+    }
+  }
 }

@@ -13,11 +13,12 @@
       display: flex;
       justify-content: space-between;
       line-height: 60px;
-      font-size: 30px;
+      font-size: 20px;
       height: 60px;
       color: @fluoGreen;
 
       .trigger {
+        font-size: 35px;
         cursor: pointer;
       }
     }
@@ -27,7 +28,7 @@
     background: @slateGreen;
     color: @darkGreen;
     line-height: 30px;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   nav {
@@ -35,15 +36,20 @@
     top: 60px;
     left: 0;
     right: 0;
+    border-bottom: 2px solid @darkGreen;
     background: @green;
     color: @darkGreen;
 
     .cont {
       > div {
-        border-bottom: 1px solid @darkGreen;
-        line-height: 50px;
-        font-size: 30px;
+        border-bottom: 2px solid @darkGreen;
+        line-height: 60px;
+        font-size: 25px;
         font-weight: bold;
+
+        &:last-child {
+          border-bottom: none;
+        }
       }
     }
   }

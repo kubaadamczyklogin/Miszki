@@ -24,7 +24,7 @@ export default function Add() {
   }
 
   return (
-    <div className="Editable cardList">
+    <div className="editable cardList">
       <div className="cont">
         {newDeck.map((item) =>
           item.editable ? (
@@ -60,23 +60,23 @@ function EditableCard(props) {
   }
 
   return (
-    <div className="Card Editable">
-      <div className="Forward">
+    <div className="card editable">
+      <div className="backward">
         <input
           autoFocus
           type="text"
-          placeholder="pl"
-          ref={pl}
+          placeholder="en"
+          ref={en}
           onKeyUp={(e) => {
             focusNextInputOnEnter(e, en);
           }}
         />
       </div>
-      <div className="Backward">
+      <div className="forward">
         <input
           type="text"
-          placeholder="en"
-          ref={en}
+          placeholder="pl"
+          ref={pl}
           onKeyUp={(e) => {
             saveCardOnEnter(e);
           }}
@@ -88,11 +88,10 @@ function EditableCard(props) {
 
 function UnpackedCard(props) {
   const { pl, en } = props.content;
-
   return (
-    <div className="Card Unpacked">
-      <div className="Forward">{pl}</div>
-      <div className="Backward">{en}</div>
+    <div className="card unpacked">
+      <div className="backward">{en}</div>
+      <div className="forward">{pl}</div>
     </div>
   );
 }
