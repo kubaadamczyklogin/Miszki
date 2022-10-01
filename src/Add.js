@@ -1,3 +1,4 @@
+import "./css/cardList.css";
 import { useState, useRef } from "react";
 
 export default function Add() {
@@ -23,14 +24,16 @@ export default function Add() {
   }
 
   return (
-    <div className="Editable CardList">
-      {newDeck.map((item) =>
-        item.editable ? (
-          <EditableCard key={item.id} id={item.id} saveCard={saveCard} />
-        ) : (
-          <UnpackedCard key={item.id} content={item} />
-        )
-      )}
+    <div className="Editable cardList">
+      <div className="cont">
+        {newDeck.map((item) =>
+          item.editable ? (
+            <EditableCard key={item.id} id={item.id} saveCard={saveCard} />
+          ) : (
+            <UnpackedCard key={item.id} content={item} />
+          )
+        )}
+      </div>
     </div>
   );
 }

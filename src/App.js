@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./css/app.css";
 import Menu from "./Menu.js";
 import Add from "./Add.js";
 import { useState } from "react";
