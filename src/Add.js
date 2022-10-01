@@ -6,7 +6,6 @@ export default function Add() {
   //const [newCard, setNewCard] = useState();
 
   function saveCard(id, card) {
-    console.log(id);
     setNewDeck((prev) => {
       let biggestId = 0;
       const updatedDeck = prev.map((item) => {
@@ -23,6 +22,21 @@ export default function Add() {
     });
   }
 
+  function editSavedCard(id, side) {
+    setNewDeck((prev) => {
+      const updatedDeck = prev.map((item) => {
+        if (id === item.id) {
+          item.editable = true;
+          return item;
+        } else {
+          return item;
+        }
+      });
+
+      return updatedDeck;
+    });
+  }
+
   return (
     <div className="editable cardList">
       <div className="cont">
@@ -30,7 +44,11 @@ export default function Add() {
           item.editable ? (
             <EditableCard key={item.id} id={item.id} saveCard={saveCard} />
           ) : (
-            <UnpackedCard key={item.id} content={item} />
+            <UnpackedCard
+              key={item.id}
+              content={item}
+              editSavedCard={editSavedCard}
+            />
           )
         )}
       </div>
@@ -87,11 +105,26 @@ function EditableCard(props) {
 }
 
 function UnpackedCard(props) {
-  const { pl, en } = props.content;
+  const { id, pl, en } = props.content;
+
   return (
     <div className="card unpacked">
-      <div className="backward">{en}</div>
-      <div className="forward">{pl}</div>
+      <div
+        className="backward"
+        onClick={() => {
+          props.editSavedCard(id, "backward");
+        }}
+      >
+        {en}
+      </div>
+      <div
+        className="forward"
+        onClick={() => {
+          props.editSavedCard(id, "forward");
+        }}
+      >
+        {pl}
+      </div>
     </div>
   );
 }
