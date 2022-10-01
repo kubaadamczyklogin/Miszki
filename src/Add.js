@@ -42,7 +42,7 @@ export default function Add() {
       <div className="cont">
         {newDeck.map((item) =>
           item.editable ? (
-            <EditableCard key={item.id} id={item.id} saveCard={saveCard} />
+            <EditableCard key={item.id} content={item} saveCard={saveCard} />
           ) : (
             <UnpackedCard
               key={item.id}
@@ -57,8 +57,9 @@ export default function Add() {
 }
 
 function EditableCard(props) {
-  const pl = useRef("");
-  const en = useRef("");
+  const { id, pl, en } = props.content;
+  const newPl = useRef();
+  const newEn = useRef();
 
   function focusNextInputOnEnter(e, targetInput) {
     if (e.key === "Enter" || e.keyCode === 13) {
@@ -68,10 +69,10 @@ function EditableCard(props) {
 
   function saveCardOnEnter(e) {
     if (e.key === "Enter" || e.keyCode === 13) {
-      props.saveCard(props.id, {
-        id: props.id,
-        pl: pl.current.value,
-        en: en.current.value,
+      props.saveCard(id, {
+        id: id,
+        pl: newPl.current.value,
+        en: newEn.current.value,
         editable: false,
       });
     }
@@ -84,9 +85,10 @@ function EditableCard(props) {
           autoFocus
           type="text"
           placeholder="en"
-          ref={en}
+          defaultValue={en}
+          ref={newEn}
           onKeyUp={(e) => {
-            focusNextInputOnEnter(e, pl);
+            focusNextInputOnEnter(e, newPl);
           }}
         />
       </div>
@@ -94,7 +96,8 @@ function EditableCard(props) {
         <input
           type="text"
           placeholder="pl"
-          ref={pl}
+          defaultValue={pl}
+          ref={newPl}
           onKeyUp={(e) => {
             saveCardOnEnter(e);
           }}
