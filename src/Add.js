@@ -68,7 +68,7 @@ function EditableCard(props) {
           placeholder="en"
           ref={en}
           onKeyUp={(e) => {
-            focusNextInputOnEnter(e, en);
+            focusNextInputOnEnter(e, pl);
           }}
         />
       </div>
