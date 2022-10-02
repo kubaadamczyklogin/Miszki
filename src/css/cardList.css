@@ -11,10 +11,13 @@ body {
   width: 330px;
   margin: 0 auto;
 }
+.cardList {
+  padding: 10px 0;
+}
 .cardList .card {
   display: flex;
   justify-content: space-between;
-  padding: 15px 0;
+  padding: 10px 0;
 }
 .cardList .card .backward,
 .cardList .card .forward {

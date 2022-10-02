@@ -3,7 +3,6 @@ import { useState, useRef } from "react";
 
 export default function Add() {
   const [newDeck, setNewDeck] = useState([{ id: 0, editable: true }]);
-  //const [newCard, setNewCard] = useState();
 
   function saveCard(id, card) {
     setNewDeck((prev) => {
@@ -22,13 +21,15 @@ export default function Add() {
     });
   }
 
-  function editSavedCard(id, side) {
+  function editSavedCard(id, focusRight) {
     setNewDeck((prev) => {
       const updatedDeck = prev.map((item) => {
         if (id === item.id) {
           item.editable = true;
+          focusRight ? (item.focusRight = true) : "";
           return item;
         } else {
+          item.editable = false;
           return item;
         }
       });
@@ -57,7 +58,7 @@ export default function Add() {
 }
 
 function EditableCard(props) {
-  const { id, pl, en } = props.content;
+  const { id, pl, en, focusRight } = props.content;
   const newPl = useRef();
   const newEn = useRef();
 
@@ -82,7 +83,7 @@ function EditableCard(props) {
     <div className="card editable">
       <div className="backward">
         <input
-          autoFocus
+          autoFocus={!focusRight}
           type="text"
           placeholder="en"
           defaultValue={en}
@@ -94,6 +95,7 @@ function EditableCard(props) {
       </div>
       <div className="forward">
         <input
+          autoFocus={focusRight}
           type="text"
           placeholder="pl"
           defaultValue={pl}
@@ -115,7 +117,7 @@ function UnpackedCard(props) {
       <div
         className="backward"
         onClick={() => {
-          props.editSavedCard(id, "backward");
+          props.editSavedCard(id);
         }}
       >
         {en}
@@ -123,7 +125,7 @@ function UnpackedCard(props) {
       <div
         className="forward"
         onClick={() => {
-          props.editSavedCard(id, "forward");
+          props.editSavedCard(id, true);
         }}
       >
         {pl}
