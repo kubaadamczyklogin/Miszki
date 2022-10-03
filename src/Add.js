@@ -1,17 +1,25 @@
 import "./css/cardList.css";
-import { useState, useRef } from "react";
+import { useState, useRef, forwardRef, useImperativeHandle } from "react";
+import React from "react";
 
 export default function Add() {
   const [newDeck, setNewDeck] = useState([{ id: 0, editable: true }]);
+  const editableCardRef = useRef();
 
-  function saveCard(id, card) {
+  function saveCard(id) {  
+
     setNewDeck((prev) => {
       let biggestId = 0;
       const updatedDeck = prev.map((item) => {
         if (item.id > biggestId) biggestId = item.id;
 
         if (id === item.id) {
-          return card;
+            return {
+                id: id,
+                pl: editableCardRef.current.newPl,
+                en: editableCardRef.current.newEn,      
+                editable: false,
+            };
         } else {
           return item;
         }
@@ -21,15 +29,22 @@ export default function Add() {
     });
   }
 
-  function editSavedCard(id, focusRight) {
+  function editSavedCard(id, focusRight) {   
+
     setNewDeck((prev) => {
       const updatedDeck = prev.map((item) => {
         if (id === item.id) {
           item.editable = true;
-          focusRight ? (item.focusRight = true) : "";
+          item.focusRight = focusRight;
           return item;
+        } else if (item.editable) {
+          return {
+            id: item.id,
+            pl: editableCardRef.current.newPl,
+            en: editableCardRef.current.newEn,
+            editable: false,
+          };
         } else {
-          item.editable = false;
           return item;
         }
       });
@@ -43,7 +58,12 @@ export default function Add() {
       <div className="cont">
         {newDeck.map((item) =>
           item.editable ? (
-            <EditableCard key={item.id} content={item} saveCard={saveCard} />
+            <EditableCard
+              ref={editableCardRef}
+              key={item.id}
+              content={item}
+              saveCard={saveCard}
+            />
           ) : (
             <UnpackedCard
               key={item.id}
@@ -57,10 +77,20 @@ export default function Add() {
   );
 }
 
-function EditableCard(props) {
+//const EditableCard = React.forwardRef((props, newPL) => {
+function EditableCard(props, ref) {
   const { id, pl, en, focusRight } = props.content;
-  const newPl = useRef();
   const newEn = useRef();
+  const newPl = useRef();
+
+  useImperativeHandle(ref, () => ({
+    get newPl() {
+      return newPl.current.value;
+    },
+    get newEn() {
+      return newEn.current.value;
+    },
+  }));
 
   function focusNextInputOnEnter(e, targetInput) {
     if (e.key === "Enter" || e.keyCode === 13) {
@@ -70,12 +100,7 @@ function EditableCard(props) {
 
   function saveCardOnEnter(e) {
     if (e.key === "Enter" || e.keyCode === 13) {
-      props.saveCard(id, {
-        id: id,
-        pl: newPl.current.value,
-        en: newEn.current.value,
-        editable: false,
-      });
+      props.saveCard(id);
     }
   }
 
@@ -108,6 +133,7 @@ function EditableCard(props) {
     </div>
   );
 }
+EditableCard = forwardRef(EditableCard);
 
 function UnpackedCard(props) {
   const { id, pl, en } = props.content;
