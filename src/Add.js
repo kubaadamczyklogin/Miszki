@@ -6,20 +6,19 @@ export default function Add() {
   const [newDeck, setNewDeck] = useState([{ id: 0, editable: true }]);
   const editableCardRef = useRef();
 
-  function saveCard(id) {  
-
+  function saveCard(id) {
     setNewDeck((prev) => {
       let biggestId = 0;
       const updatedDeck = prev.map((item) => {
         if (item.id > biggestId) biggestId = item.id;
 
         if (id === item.id) {
-            return {
-                id: id,
-                pl: editableCardRef.current.newPl,
-                en: editableCardRef.current.newEn,      
-                editable: false,
-            };
+          return {
+            id: id,
+            pl: editableCardRef.current.newPl,
+            en: editableCardRef.current.newEn,
+            editable: false,
+          };
         } else {
           return item;
         }
@@ -29,8 +28,7 @@ export default function Add() {
     });
   }
 
-  function editSavedCard(id, focusRight) {   
-
+  function editSavedCard(id, focusRight) {
     setNewDeck((prev) => {
       const updatedDeck = prev.map((item) => {
         if (id === item.id) {
