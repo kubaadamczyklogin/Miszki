@@ -12,7 +12,7 @@ body {
   margin: 0 auto;
 }
 .cardList {
-  padding: 10px 0;
+  padding: 10px 0 100px;
 }
 .cardList .card {
   display: flex;
@@ -54,4 +54,24 @@ body {
 .cardList .card.editable .backward,
 .cardList .card.editable .forward {
   background: #ffffff;
+}
+.cardList .bottom-buttons {
+  padding: 10px 0;
+  position: fixed;
+  background: #4cb3a0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.cardList .bottom-buttons .cont button {
+  width: 100%;
+  line-height: 50px;
+  background: #519ce4;
+  border-radius: 25px;
+  border: none;
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
 }
