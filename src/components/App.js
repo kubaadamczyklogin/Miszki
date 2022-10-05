@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [body, setBody] = useState(<Add />);
+  const [body, setBody] = useState(<Add choosePage={choosePage} />);
 
   function choosePage(page) {
     switch (page) {
@@ -13,7 +13,7 @@ export default function App() {
         setBody(<p>Uczenie się - w przygotowaniu</p>);
         break;
       case "add":
-        setBody(<Add />);
+        setBody(<Add choosePage={choosePage} />);
         break;
       case "set":
         setBody(<p>Wybieranie talii - w przygotowaniu</p>);
@@ -22,7 +22,7 @@ export default function App() {
         setBody(<p>Edytowanie talii - w przygotowaniu</p>);
         break;
       default:
-        return null;
+        setBody(<p>Strona główna</p>);
     }
     setOpenMenu(false);
   }

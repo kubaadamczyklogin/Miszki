@@ -1,12 +1,22 @@
 import "./../css/cardList.css";
-import { useState, useRef} from "react";
+import { useState, useRef } from "react";
 import UnpackedCard from "./UnpackedCard.js";
 import EditableCard from "./EditableCard.js";
 import SaveButton from "./SaveButton.js";
+import { saveDeckToFile } from "./FilesEditor.js";
 
-export default function Add() {
+export default function Add(props) {
   const [newDeck, setNewDeck] = useState([{ id: 0, editable: true }]);
   const editableCardRef = useRef();
+
+  function newCardData(id) {
+    return {
+      id: id,
+      pl: editableCardRef.current.newPl,
+      en: editableCardRef.current.newEn,
+      editable: false,
+    };
+  }
 
   function saveCard(id) {
     setNewDeck((prev) => {
@@ -15,12 +25,7 @@ export default function Add() {
         if (item.id > biggestId) biggestId = item.id;
 
         if (id === item.id) {
-          return {
-            id: id,
-            pl: editableCardRef.current.newPl,
-            en: editableCardRef.current.newEn,
-            editable: false,
-          };
+          return newCardData(id);
         } else {
           return item;
         }
@@ -38,12 +43,7 @@ export default function Add() {
           item.focusRight = focusRight;
           return item;
         } else if (item.editable) {
-          return {
-            id: item.id,
-            pl: editableCardRef.current.newPl,
-            en: editableCardRef.current.newEn,
-            editable: false,
-          };
+          return newCardData(item.id);
         } else {
           return item;
         }
@@ -52,32 +52,41 @@ export default function Add() {
       return updatedDeck;
     });
   }
-  
-  function saveDeck(){
-      console.log('zapisz talię');
-  };
+
+  function saveDeck() {
+    const deckToSave = newDeck.map((item) => {
+      if (item.editable) {
+        return newCardData(item.id);
+      } else {
+        return item;
+      }
+    });
+
+    saveDeckToFile(deckToSave, "test");
+    props.choosePage();
+  }
 
   return (
     <div className="editable cardList">
-        <div className="cont">
+      <div className="cont">
         {newDeck.map((item) =>
-            item.editable ? (
+          item.editable ? (
             <EditableCard
-                ref={editableCardRef}
-                key={item.id}
-                content={item}
-                saveCard={saveCard}
+              ref={editableCardRef}
+              key={item.id}
+              content={item}
+              saveCard={saveCard}
             />
-            ) : (
+          ) : (
             <UnpackedCard
-                key={item.id}
-                content={item}
-                editSavedCard={editSavedCard}
+              key={item.id}
+              content={item}
+              editSavedCard={editSavedCard}
             />
-            )
+          )
         )}
-        </div>
-        <SaveButton saveDeck={saveDeck}/>
+      </div>
+      <SaveButton saveDeck={saveDeck} />
     </div>
   );
 }
