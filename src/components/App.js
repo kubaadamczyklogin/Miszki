@@ -7,7 +7,7 @@ export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
   const [body, setBody] = useState(<Add choosePage={choosePage} />);
 
-  function choosePage(page) {
+  function choosePage(page, data) {
     switch (page) {
       case "lern":
         setBody(<p>Uczenie się - w przygotowaniu</p>);
@@ -22,7 +22,7 @@ export default function App() {
         setBody(<p>Edytowanie talii - w przygotowaniu</p>);
         break;
       default:
-        setBody(<p>Strona główna</p>);
+        setBody(<p>Komunikat: {data.done + " " + data.text}</p>);
     }
     setOpenMenu(false);
   }

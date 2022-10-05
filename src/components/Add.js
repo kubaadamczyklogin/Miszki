@@ -53,7 +53,7 @@ export default function Add(props) {
     });
   }
 
-  function saveDeck() {
+  async function saveDeck() {
     const deckToSave = newDeck.map((item) => {
       if (item.editable) {
         return newCardData(item.id);
@@ -62,8 +62,14 @@ export default function Add(props) {
       }
     });
 
-    saveDeckToFile(deckToSave, "test");
-    props.choosePage();
+    saveDeckToFile(deckToSave, "test").then(
+      (resolve) => {
+        props.choosePage(false, { done: true, text: resolve });
+      },
+      (error) => {
+        props.choosePage(false, { done: false, text: error });
+      }
+    );
   }
 
   return (

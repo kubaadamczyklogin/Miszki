@@ -9,10 +9,12 @@
   ],
   "main": "src/index.js",
   "dependencies": {
+    "browserify-fs": "^1.0.0",
     "less": "4.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-scripts": "4.0.0"
+    "react-scripts": "4.0.0",
+    "string_decoder": "^1.3.0"
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
