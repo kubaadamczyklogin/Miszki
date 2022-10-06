@@ -1,19 +1,25 @@
 import "./../css/app.css";
 import Menu from "./Menu.js";
 import Add from "./Add.js";
+import Home from "./Home.js";
+import Statement from "./Statement.js";
 import { useState } from "react";
+import { useEffect } from "react";
+
+const user = "Kuba";
 
 export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [body, setBody] = useState(<Add choosePage={choosePage} />);
+  const [body, setBody] = useState(false);
+  const [statement, setStatement] = useState(false);
 
-  function choosePage(page, data) {
+  function choosePage(page) {
     switch (page) {
       case "lern":
         setBody(<p>Uczenie się - w przygotowaniu</p>);
         break;
       case "add":
-        setBody(<Add choosePage={choosePage} />);
+        setBody(<Add choosePage={choosePage} openStatement={openStatement} />);
         break;
       case "set":
         setBody(<p>Wybieranie talii - w przygotowaniu</p>);
@@ -22,7 +28,7 @@ export default function App() {
         setBody(<p>Edytowanie talii - w przygotowaniu</p>);
         break;
       default:
-        setBody(<p>Komunikat: {data.done + " " + data.text}</p>);
+        setBody(<Home user={user} />);
     }
     setOpenMenu(false);
   }
@@ -31,14 +37,36 @@ export default function App() {
     setOpenMenu((prev) => !prev);
   }
 
+  function openStatement(data) {
+    setStatement(data);
+  }
+
+  function closeStatus() {
+    setStatement(false);
+  }
+
+  if (!body) choosePage();
+
+  useEffect(() => {
+    console.log("odświerzamy statement");
+  }, [statement]);
+
   return (
     <div className="App">
       <Menu
+        user={user}
         menuTrigger={menuTrigger}
         choosePage={choosePage}
         openMenu={openMenu}
       />
       {body}
+      {statement !== false && (
+        <Statement
+          text={statement.text}
+          status={statement.status}
+          closeStatus={closeStatus}
+        />
+      )}
     </div>
   );
 }

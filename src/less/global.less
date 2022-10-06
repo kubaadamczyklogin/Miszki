@@ -5,18 +5,14 @@
 @lightBlue: #cce1f4;
 @blue: #519ce4;
 @white: #ffffff;
+@red: #f00000;
 
-body {
-  height: 100vh;
-  margin: 0;
-  background: @lightBlue;
-  color: @darkGreen;
-  padding: 90px 0 60px;
-  font-family: Verdana, sans-serif;
-  box-sizing: border-box;
-}
-
-.cont {
-  width: 330px;
-  margin: 0 auto;
+.overlay() {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
 }

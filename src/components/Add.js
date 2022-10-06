@@ -64,10 +64,12 @@ export default function Add(props) {
 
     saveDeckToFile(deckToSave, "test").then(
       (resolve) => {
-        props.choosePage(false, { done: true, text: resolve });
+        props.openStatement({ status: "success", text: resolve });
+        props.choosePage(false);
       },
       (error) => {
-        props.choosePage(false, { done: false, text: error });
+        props.openStatement({ status: "error", text: error });
+        props.choosePage(false);
       }
     );
   }

@@ -5,7 +5,7 @@ export default function Menu(props) {
     <div className="menu">
       <div className="header">
         <div className="cont">
-          <div className="user">Kuba</div>
+          <div className="user">{props.user}</div>
           <div className="trigger" onClick={props.menuTrigger}>
             {props.openMenu ? "✕" : "☰"}
           </div>
