@@ -1,10 +1,11 @@
 import "./../css/app.css";
 import Menu from "./Menu.js";
-import Add from "./Add.js";
 import Home from "./Home.js";
 import Statement from "./Statement.js";
+import Lern from "./Lern.js";
+import Add from "./Add.js";
+
 import { useState } from "react";
-import { useEffect } from "react";
 
 const user = "Kuba";
 
@@ -16,7 +17,7 @@ export default function App() {
   function choosePage(page) {
     switch (page) {
       case "lern":
-        setBody(<p>Uczenie się - w przygotowaniu</p>);
+        setBody(<Lern choosePage={choosePage} openStatement={openStatement}/>);
         break;
       case "add":
         setBody(<Add choosePage={choosePage} openStatement={openStatement} />);
@@ -45,11 +46,7 @@ export default function App() {
     setStatement(false);
   }
 
-  if (!body) choosePage();
-
-  useEffect(() => {
-    console.log("odświerzamy statement");
-  }, [statement]);
+  if (!body) choosePage(); 
 
   return (
     <div className="App">

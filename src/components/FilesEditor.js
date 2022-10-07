@@ -5,7 +5,6 @@ export function saveDeckToFile(deck, deckName) {
   return new Promise((resolve, reject) => {
     fs.mkdir("../../decks", function () {
       fs.writeFile(`../../decks/${deckName}.txt`, deckJson, function (err) {
-        console.count("promise");
         if (err) {
           reject(err);
         } else {

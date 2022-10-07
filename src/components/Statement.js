@@ -3,8 +3,6 @@ import "./../css/statement.css";
 export default function Statement(props) {
   const { text, status, closeStatus } = props;
 
-  console.log(text, status);
-
   return (
     <div className="statement" onClick={closeStatus}>
       <div className="cont">
