@@ -1,4 +1,4 @@
-//import "./../css/lerning.css";
+import "./../css/lerning.css";
 import { useState } from "react";
 
 export default function Lern(props) {
@@ -34,14 +34,14 @@ export default function Lern(props) {
 
   return (
     <div className="lerning">
-      <div className="cont">
+      <div className="cont card-container">
         <LerningCard frontSide={frontSide} data={deck[counter]} />
-        <LerningButtons
-          frontSide={frontSide}
-          rotateCard={rotateCard}
-          nextCard={nextCard}
-        />
       </div>
+      <LerningButtons
+        frontSide={frontSide}
+        rotateCard={rotateCard}
+        nextCard={nextCard}
+      />
     </div>
   );
 }
@@ -69,18 +69,18 @@ function LerningButtons(props) {
     <div className="lerning-buttons bottom-buttons">
       <div className="cont">
         {frontSide ? (
-          <>
-            <button className="fail" onClick={props.rotateCard}>
-              nie wiem
-            </button>
-            <button className="succeed" onClick={props.rotateCard}>
-              wiem
-            </button>
-          </>
-        ) : (
-          <button className="next" onClick={props.nextCard}>
+          <button className="blue" onClick={props.rotateCard}>
             dalej
           </button>
+        ) : (
+          <>
+            <button className="red" onClick={props.nextCard}>
+              powtórzę
+            </button>
+            <button className="green" onClick={props.nextCard}>
+              wiedziałem
+            </button>
+          </>
         )}
       </div>
     </div>
