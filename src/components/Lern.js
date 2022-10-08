@@ -1,14 +1,32 @@
 import "./../css/lerning.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { readDeckFromFile } from "./FilesEditor.js";
 
 export default function Lern(props) {
-  const deck = [
-    { id: 1, pl: "bla", en: "blah" },
-    { id: 2, pl: "kot", en: "cat" },
-    { id: 3, pl: "pies", en: "dog" },
-  ];
+  //   const deck = [
+  //     { id: 1, pl: "bla", en: "blah" },
+  //     { id: 2, pl: "kot", en: "cat" },
+  //     { id: 3, pl: "pies", en: "dog" },
+  //   ];
+  const [deck, setDeck] = useState(false);
   const [counter, setCounter] = useState(0);
   const [frontSide, setFrontSide] = useState(true);
+
+  useEffect(() => {
+    readDeckFromFile("test").then(
+      (resolve) => {
+        const loadedDeck = JSON.parse(resolve);
+        setDeck(loadedDeck);
+      },
+      (error) => {
+        props.openStatement({
+          status: "error",
+          text: error,
+        });
+        props.choosePage(false);
+      }
+    );
+  }, []);
 
   function rotateCard() {
     setFrontSide(false);
@@ -34,14 +52,21 @@ export default function Lern(props) {
 
   return (
     <div className="lerning">
-      <div className="cont card-container">
-        <LerningCard frontSide={frontSide} data={deck[counter]} />
-      </div>
-      <LerningButtons
-        frontSide={frontSide}
-        rotateCard={rotateCard}
-        nextCard={nextCard}
-      />
+      {!deck ? (
+        "loading..."
+      ) : (
+        <>
+          <div className="cont card-container">
+            <LerningCard frontSide={frontSide} data={deck[counter]} />
+          </div>
+          <LerningButtons
+            frontSide={frontSide}
+            rotateCard={rotateCard}
+            nextCard={nextCard}
+          />
+        </>
+      )}
+      ;
     </div>
   );
 }
@@ -69,15 +94,15 @@ function LerningButtons(props) {
     <div className="lerning-buttons bottom-buttons">
       <div className="cont">
         {frontSide ? (
-          <button className="blue" onClick={props.rotateCard}>
-            dalej
+          <button className="blue" onClick={rotateCard}>
+            sprawdź
           </button>
         ) : (
           <>
-            <button className="red" onClick={props.nextCard}>
+            <button className="red" onClick={nextCard}>
               powtórzę
             </button>
-            <button className="green" onClick={props.nextCard}>
+            <button className="green" onClick={nextCard}>
               wiedziałem
             </button>
           </>
