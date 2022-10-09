@@ -3,14 +3,10 @@ import { useState, useEffect } from "react";
 import { readDeckFromFile } from "./FilesEditor.js";
 
 export default function Lern(props) {
-  //   const deck = [
-  //     { id: 1, pl: "bla", en: "blah" },
-  //     { id: 2, pl: "kot", en: "cat" },
-  //     { id: 3, pl: "pies", en: "dog" },
-  //   ];
   const [deck, setDeck] = useState(false);
   const [counter, setCounter] = useState(0);
   const [frontSide, setFrontSide] = useState(true);
+  const [toRepeat, setToRepeat] = useState([]);
 
   useEffect(() => {
     readDeckFromFile("test").then(
@@ -32,19 +28,27 @@ export default function Lern(props) {
     setFrontSide(false);
   }
 
-  function nextCard() {
+  function nextCard(addCardToRepeat) {
+    console.log("nextCard");
     const cardsQuantity = deck.length;
-    console.log(counter, cardsQuantity);
+    const newCounter = counter + 1;
+    let toRepeatQuantity = toRepeat.length;
 
-    if (counter + 1 < cardsQuantity) {
-      console.log("next");
-      setCounter((prev) => ++prev);
+    if (addCardToRepeat) {
+      toRepeatQuantity++;
+      setToRepeat((prevAddCardToRepeat) => [
+        ...prevAddCardToRepeat,
+        deck[counter].id,
+      ]);
+    }
+
+    if (newCounter < cardsQuantity) {
+      setCounter(newCounter);
       setFrontSide(true);
     } else {
-      console.log("finish");
       props.openStatement({
         status: "success",
-        text: `Dziś przerobiłeś ${cardsQuantity} słów`,
+        text: `Dziś przerobiłeś ${cardsQuantity} słów, nie wiedziałeś ${toRepeatQuantity}`,
       });
       props.choosePage(false);
     }
@@ -99,10 +103,20 @@ function LerningButtons(props) {
           </button>
         ) : (
           <>
-            <button className="red" onClick={nextCard}>
+            <button
+              className="red"
+              onClick={() => {
+                nextCard(true);
+              }}
+            >
               powtórzę
             </button>
-            <button className="green" onClick={nextCard}>
+            <button
+              className="green"
+              onClick={() => {
+                nextCard(false);
+              }}
+            >
               wiedziałem
             </button>
           </>
