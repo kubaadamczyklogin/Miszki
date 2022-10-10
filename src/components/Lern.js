@@ -7,6 +7,7 @@ export default function Lern(props) {
   const [counter, setCounter] = useState(0);
   const [frontSide, setFrontSide] = useState(true);
   const [toRepeat, setToRepeat] = useState([]);
+  const [repeatCounter, setRepeatCounter] = useState(0);
 
   useEffect(() => {
     readDeckFromFile("test").then(
@@ -29,7 +30,6 @@ export default function Lern(props) {
   }
 
   function nextCard(addCardToRepeat) {
-    console.log("nextCard");
     const cardsQuantity = deck.length;
     const newCounter = counter + 1;
     let toRepeatQuantity = toRepeat.length;
@@ -50,15 +50,32 @@ export default function Lern(props) {
         status: "success",
         text: `Dziś przerobiłeś ${cardsQuantity} słów, nie wiedziałeś ${toRepeatQuantity}`,
       });
-      props.choosePage(false);
+
+      if (toRepeatQuantity > 0 && repeatCounter <= 3) {
+        setFrontSide(true);
+        setRepeatCounter((prev) => ++prev);
+        setDeck((prevDeck) => {
+          let newDeck = prevDeck;
+          //   const newDeck = prevDeck.map((item) => {
+          //     if (toRepeat.includes(item.id)) {
+          //       return item;
+          //     }
+          //   });
+          //   console.log(newDeck);
+          console.log("wy");
+          setToRepeat([]);
+          // return newDeck;
+        });
+        setCounter(0);
+      } else {
+        props.choosePage(false);
+      }
     }
   }
 
   return (
     <div className="lerning">
-      {!deck ? (
-        "loading..."
-      ) : (
+      {deck && counter < deck.length ? (
         <>
           <div className="cont card-container">
             <LerningCard frontSide={frontSide} data={deck[counter]} />
@@ -69,8 +86,9 @@ export default function Lern(props) {
             nextCard={nextCard}
           />
         </>
+      ) : (
+        "loading..."
       )}
-      ;
     </div>
   );
 }
