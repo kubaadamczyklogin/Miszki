@@ -1,19 +1,31 @@
 import "./../css/lerning.css";
 import { useState, useEffect } from "react";
-import { readDeckFromFile } from "./FilesEditor.js";
+import { saveProgressDataToFile } from "./FilesEditor.js";
+import { prepareDeckToLern } from "./PrepareDeck.js";
+
+const day = 86400000;
 
 export default function Lern(props) {
   const [rootDeck, setRootDeck] = useState(false);
+  const [unusedDeck, setUnusedDeck] = useState(false);
   const [repeatCounter, setRepeatCounter] = useState(0);
   const [toRepeat, setToRepeat] = useState("");
 
   useEffect(() => {
-    readDeckFromFile("test").then(
+    prepareDeckToLern("kuba", "test").then(
       (resolve) => {
-        const loadedDeck = JSON.parse(resolve);
-        setRootDeck(loadedDeck);
-        setRepeatCounter(0);
-        setToRepeat([]);
+        if (resolve[0].length !== 0) {
+          setRootDeck(resolve[0]);
+          setUnusedDeck(resolve[1]);
+          setRepeatCounter(0);
+          setToRepeat([]);
+        } else {
+          props.openStatement({
+            status: "success",
+            text: "Na dziś niemasz żadnych słów w tej talii. W przyszłości będzie możliwość wczytania dodatkowej porcji słów.",
+          });
+          props.choosePage(false);
+        }
       },
       (error) => {
         props.openStatement({
@@ -25,13 +37,45 @@ export default function Lern(props) {
     );
   }, []);
 
+  function saveProgress(newToRepeat) {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const tomorrow = today + day;
+
+    const repetedCardsData = rootDeck.map((item) => {
+      let cardData = { id: item.id, repeatDate: tomorrow };
+      if (newToRepeat.includes(item.id)) {
+        cardData.status = 0;
+      } else {
+        cardData.status = 1;
+      }
+      return cardData;
+    });
+
+    const unusedCardsData = unusedDeck.map((item) => {
+      return { id: item.id, repeatDate: item.repeatDate, status: item.status };
+    });
+
+    progressDataCards = [...repetedCardsData, ...unusedCardsData];
+
+    const progressData = {
+      lastRepeat: today,
+      cards: progressDataCards,
+    };
+
+    saveProgressDataToFile("kuba", "test", progressData);
+  }
+
   function endRound(newToRepeat) {
     props.openStatement({
       status: "success",
       text: `Dziś przerobiłeś ${rootDeck.length} słów, nie wiedziałeś ${newToRepeat.length}`,
     });
 
-    if (newToRepeat.length === 0) {
+    if (repeatCounter === 0) {
+      saveProgress(newToRepeat);
+    }
+
+    if (newToRepeat.length === 0 || repeatCounter === 3) {
       props.choosePage(false);
     } else {
       setToRepeat(newToRepeat);
@@ -68,12 +112,10 @@ function LerningRound(props) {
   function nextCard(addCardToRepeat) {
     const newCounter = counter + 1;
     let newToRepeatArray = toRepeat;
-    console.log(newToRepeatArray);
     setFrontSide(true);
 
     if (addCardToRepeat) {
       newToRepeatArray.push(deck[counter].id);
-      console.log(newToRepeatArray, "powiększ");
     }
 
     if (newCounter < deckLength) {

@@ -63,8 +63,11 @@ export default function Add(props) {
     });
 
     saveDeckToFile(deckToSave, "test").then(
-      (resolve) => {
-        props.openStatement({ status: "success", text: resolve });
+      (deckName) => {
+        props.openStatement({
+          status: "success",
+          text: `Talia "${deckName}" została zapisana pomyślnie!`,
+        });
         props.choosePage(false);
       },
       (error) => {

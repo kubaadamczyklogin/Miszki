@@ -14,7 +14,29 @@ export function saveDeckToFile(deck, deckName) {
           if (err) {
             reject(err);
           } else {
-            resolve(`Talia "${deckName}" została zapisana pomyślnie!`);
+            resolve(deckName);
+          }
+        }
+      );
+    });
+  });
+}
+
+export function saveProgressDataToFile(user, deckName, data) {
+  console.log("data");
+  const dataJson = JSON.stringify(data);
+
+  return new Promise((resolve, reject) => {
+    fs.mkdir(`${path}/${user}`, function () {
+      fs.writeFile(
+        `${path}/${user}/${deckName}.txt`,
+        dataJson,
+        { encoding: "utf8" },
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve("ok");
           }
         }
       );
@@ -32,6 +54,24 @@ export function readDeckFromFile(deckName) {
           resolve(data);
         }
       });
+    });
+  });
+}
+
+export function readProgressDataFromFile(user, deckName) {
+  return new Promise((resolve, reject) => {
+    fs.mkdir(path, function () {
+      fs.readFile(
+        `${path}/${user}/${deckName}.txt`,
+        "utf8",
+        function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        }
+      );
     });
   });
 }
