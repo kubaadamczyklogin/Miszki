@@ -1,28 +1,36 @@
 import "./../css/app.css";
 import Menu from "./Menu.js";
+import Home from "./Home.js";
+import Statement from "./Statement.js";
+import Lern from "./Lern.js";
 import Add from "./Add.js";
+import Edit from "./Edit.js";
+
 import { useState } from "react";
+
+const user = "Kuba";
 
 export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [body, setBody] = useState(<Add />);
+  const [body, setBody] = useState(false);
+  const [statement, setStatement] = useState(false);
 
   function choosePage(page) {
     switch (page) {
       case "lern":
-        setBody(<p>Uczenie się - w przygotowaniu</p>);
+        setBody(<Lern choosePage={choosePage} openStatement={openStatement} />);
         break;
       case "add":
-        setBody(<Add />);
+        setBody(<Add choosePage={choosePage} openStatement={openStatement} />);
         break;
       case "set":
         setBody(<p>Wybieranie talii - w przygotowaniu</p>);
         break;
       case "edit":
-        setBody(<p>Edytowanie talii - w przygotowaniu</p>);
+        setBody(<Edit choosePage={choosePage} openStatement={openStatement} />);
         break;
       default:
-        return null;
+        setBody(<Home user={user} />);
     }
     setOpenMenu(false);
   }
@@ -31,14 +39,32 @@ export default function App() {
     setOpenMenu((prev) => !prev);
   }
 
+  function openStatement(data) {
+    setStatement(data);
+  }
+
+  function closeStatus() {
+    setStatement(false);
+  }
+
+  if (!body) choosePage();
+
   return (
     <div className="App">
       <Menu
+        user={user}
         menuTrigger={menuTrigger}
         choosePage={choosePage}
         openMenu={openMenu}
       />
       {body}
+      {statement !== false && (
+        <Statement
+          text={statement.text}
+          status={statement.status}
+          closeStatus={closeStatus}
+        />
+      )}
     </div>
   );
 }
