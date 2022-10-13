@@ -1,5 +1,5 @@
 import "./../css/cardList.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import UnpackedCard from "./UnpackedCard.js";
 import EditableCard from "./EditableCard.js";
 import SaveButton from "./SaveButton.js";
@@ -9,9 +9,29 @@ import {
   readDeckFromFile,
 } from "./FilesEditor.js";
 
-export default function Add(props) {
-  const [newDeck, setNewDeck] = useState([{ id: 0, editable: true }]);
+export default function Edit(props) {
+  const [newDeck, setNewDeck] = useState(false);
   const editableCardRef = useRef();
+
+  useEffect(() => {
+    readDeckFromFile("test").then(
+      (resolve) => {
+        let deckFromFile = JSON.parse(resolve);
+        let newId = Math.max(...deckFromFile.map((o) => o.id)) + 1;
+        deckFromFile = [...deckFromFile, { id: newId, editable: true }];
+        // console.log("talia");
+        // console.table(deckFromFile);
+        setNewDeck(deckFromFile);
+      },
+      (error) => {
+        props.openStatement({
+          status: "error",
+          text: error,
+        });
+        props.choosePage(false);
+      }
+    );
+  }, []);
 
   function newCardData(id) {
     return {
@@ -86,27 +106,31 @@ export default function Add(props) {
     );
   }
 
-  return (
-    <div className="editable cardList">
-      <div className="cont">
-        {newDeck.map((item) =>
-          item.editable ? (
-            <EditableCard
-              ref={editableCardRef}
-              key={item.id}
-              content={item}
-              saveCard={saveCard}
-            />
-          ) : (
-            <UnpackedCard
-              key={item.id}
-              content={item}
-              editSavedCard={editSavedCard}
-            />
-          )
-        )}
+  if (newDeck) {
+    return (
+      <div className="editable cardList">
+        <div className="cont">
+          {newDeck.map((item) =>
+            item.editable ? (
+              <EditableCard
+                ref={editableCardRef}
+                key={item.id}
+                content={item}
+                saveCard={saveCard}
+              />
+            ) : (
+              <UnpackedCard
+                key={item.id}
+                content={item}
+                editSavedCard={editSavedCard}
+              />
+            )
+          )}
+        </div>
+        <SaveButton saveDeck={saveDeck} />
       </div>
-      <SaveButton saveDeck={saveDeck} />
-    </div>
-  );
+    );
+  } else {
+    return "loading...";
+  }
 }

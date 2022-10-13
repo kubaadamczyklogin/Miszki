@@ -4,6 +4,7 @@ import Home from "./Home.js";
 import Statement from "./Statement.js";
 import Lern from "./Lern.js";
 import Add from "./Add.js";
+import Edit from "./Edit.js";
 
 import { useState } from "react";
 
@@ -17,7 +18,7 @@ export default function App() {
   function choosePage(page) {
     switch (page) {
       case "lern":
-        setBody(<Lern choosePage={choosePage} openStatement={openStatement}/>);
+        setBody(<Lern choosePage={choosePage} openStatement={openStatement} />);
         break;
       case "add":
         setBody(<Add choosePage={choosePage} openStatement={openStatement} />);
@@ -26,7 +27,7 @@ export default function App() {
         setBody(<p>Wybieranie talii - w przygotowaniu</p>);
         break;
       case "edit":
-        setBody(<p>Edytowanie talii - w przygotowaniu</p>);
+        setBody(<Edit choosePage={choosePage} openStatement={openStatement} />);
         break;
       default:
         setBody(<Home user={user} />);
@@ -46,7 +47,7 @@ export default function App() {
     setStatement(false);
   }
 
-  if (!body) choosePage(); 
+  if (!body) choosePage();
 
   return (
     <div className="App">
