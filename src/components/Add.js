@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import UnpackedCard from "./UnpackedCard.js";
 import EditableCard from "./EditableCard.js";
 import SaveButton from "./SaveButton.js";
-import { saveDeckToFile } from "./FilesEditor.js";
+import { saveDeckToFile, saveProgressDataToFile } from "./FilesEditor.js";
 
 export default function Add(props) {
   const [newDeck, setNewDeck] = useState([{ id: 0, editable: true }]);
@@ -55,12 +55,16 @@ export default function Add(props) {
 
   async function saveDeck() {
     const deckToSave = newDeck.map((item) => {
+      let newItem;
       if (item.editable) {
-        return newCardData(item.id);
+        newItem = newCardData(item.id);
       } else {
-        return item;
+        newItem = item;
       }
-    });
+      delete newItem.editable;
+
+      return newItem;
+    });   
 
     saveDeckToFile(deckToSave, "test").then(
       (deckName) => {
@@ -69,6 +73,7 @@ export default function Add(props) {
           text: `Talia "${deckName}" została zapisana pomyślnie!`,
         });
         props.choosePage(false);
+        saveProgressDataToFile("kuba", "test", { lastRepeat: 0, cards: [] });
       },
       (error) => {
         props.openStatement({ status: "error", text: error });

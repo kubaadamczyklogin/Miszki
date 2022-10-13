@@ -23,7 +23,6 @@ export function saveDeckToFile(deck, deckName) {
 }
 
 export function saveProgressDataToFile(user, deckName, data) {
-  console.log("data");
   const dataJson = JSON.stringify(data);
 
   return new Promise((resolve, reject) => {

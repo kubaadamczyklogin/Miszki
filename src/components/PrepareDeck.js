@@ -25,23 +25,24 @@ export async function prepareDeckToLern(user, name) {
 
   deck = await readDeckFromFile(name);
   deck = JSON.parse(deck);
-  //progressData = await readProgressDataFromFile(user, name);
-  //   progressData = JSON.parse(progressData);
+  progressData = await readProgressDataFromFile(user, name);
+  progressData = JSON.parse(progressData);
 
-  progressData = {
-    lastRepeat: today - day,
-    cards: [
-      { id: 0, repeatDate: today, status: 4 },
-      { id: 1, repeatDate: today, status: 3 },
-      { id: 2, repeatDate: today, status: 2 },
-      { id: 3, repeatDate: today, status: 1 },
-      { id: 4, repeatDate: today, status: 0 },
-    ],
-  };
+  // do testowania
+  //   progressData = {
+  //     lastRepeat: today - day,
+  //     cards: [
+  //       { id: 0, repeatDate: today, status: 4 },
+  //       { id: 1, repeatDate: today, status: 3 },
+  //       { id: 2, repeatDate: today, status: 2 },
+  //       { id: 3, repeatDate: today, status: 1 },
+  //       { id: 4, repeatDate: today, status: 0 },
+  //     ],
+  //   };
 
-  console.log("progres z serwera");
-  console.log(progressData);
-  console.table(progressData.cards);
+  //   console.log("progres z serwera");
+  //   console.log(progressData);
+  //   console.table(progressData.cards);
 
   if (progressData.lastRepeat < today) {
     // synchronizacja danych z talią

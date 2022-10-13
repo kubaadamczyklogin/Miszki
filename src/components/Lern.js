@@ -24,8 +24,8 @@ export default function Lern(props) {
   useEffect(() => {
     prepareDeckToLern("kuba", "test").then(
       (resolve) => {
-        console.log("spreparowana talia");
-        console.table(resolve[0]);
+        // console.log("spreparowana talia");
+        // console.table(resolve[0]);
         if (resolve[0].length !== 0) {
           setDeckToLern(resolve[0]);
           setDeckNotToLern(resolve[1]);
@@ -97,10 +97,10 @@ export default function Lern(props) {
       cards: progressDataCards,
     };
 
-    console.log("progres do pliku");
-    console.table(progressDataCards);
-    console.log(progressData);
-    //saveProgressDataToFile("kuba", "test", progressData);
+    // console.log("progres do pliku");
+    // console.table(progressDataCards);
+    // console.log(progressData);
+    saveProgressDataToFile("kuba", "test", progressData);
   }
 
   function endRound(newToRepeat) {
