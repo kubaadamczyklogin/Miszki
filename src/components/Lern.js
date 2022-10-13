@@ -3,26 +3,38 @@ import { useState, useEffect } from "react";
 import { saveProgressDataToFile } from "./FilesEditor.js";
 import { prepareDeckToLern } from "./PrepareDeck.js";
 
+// statusy:
+// 0 - karta wybrana do powtórki, której jeszcze się nie nauczyliśmy
+// 1 - karta do powtórki jutro
+// 2 - karta do powtóki za 3 dni
+// 3 - karta do powrórki za tydzień (7) dni
+// 4 - karta do powrórki za miesiąć (30) dni
+// 10 - karta nowa, jeszcze nie używana
+// 20 - karta którą użytkownik już poznał
+
 const day = 86400000;
+const nextRepeatDatePerStatus = [day, day, day * 3, day * 7, day * 30];
 
 export default function Lern(props) {
-  const [rootDeck, setRootDeck] = useState(false);
-  const [unusedDeck, setUnusedDeck] = useState(false);
+  const [deckToLern, setDeckToLern] = useState(false);
+  const [deckNotToLern, setDeckNotToLern] = useState(false);
   const [repeatCounter, setRepeatCounter] = useState(0);
   const [toRepeat, setToRepeat] = useState("");
 
   useEffect(() => {
     prepareDeckToLern("kuba", "test").then(
       (resolve) => {
+        console.log("spreparowana talia");
+        console.table(resolve[0]);
         if (resolve[0].length !== 0) {
-          setRootDeck(resolve[0]);
-          setUnusedDeck(resolve[1]);
+          setDeckToLern(resolve[0]);
+          setDeckNotToLern(resolve[1]);
           setRepeatCounter(0);
           setToRepeat([]);
         } else {
           props.openStatement({
             status: "success",
-            text: "Na dziś niemasz żadnych słów w tej talii. W przyszłości będzie możliwość wczytania dodatkowej porcji słów.",
+            text: "Na dziś niemasz żadnych słów w tej talii. W przyszłości będzie możliwość powtarzania jutrzejszej porcji słów",
           });
           props.choosePage(false);
         }
@@ -39,36 +51,62 @@ export default function Lern(props) {
 
   function saveProgress(newToRepeat) {
     const today = new Date().setHours(0, 0, 0, 0);
-    const tomorrow = today + day;
 
-    const repetedCardsData = rootDeck.map((item) => {
-      let cardData = { id: item.id, repeatDate: tomorrow };
-      if (newToRepeat.includes(item.id)) {
-        cardData.status = 0;
-      } else {
-        cardData.status = 1;
+    const progressDataCardsRepeated = deckToLern.map((item) => {
+      let cardData = { id: item.id };
+      let newStatus = 0;
+
+      if (!newToRepeat.includes(item.id)) {
+        if (item.status < 4) {
+          newStatus = ++item.status;
+        } else if (item.status === 4) {
+          newStatus = 20;
+        } else {
+          newStatus = 1;
+        }
       }
+      cardData.status = newStatus;
+      if (newStatus !== 20) {
+        cardData.repeatDate = nextRepeatDatePerStatus[newStatus] + today;
+      } else {
+        cardData.repeatDate = 0;
+      }
+
       return cardData;
     });
 
-    const unusedCardsData = unusedDeck.map((item) => {
-      return { id: item.id, repeatDate: item.repeatDate, status: item.status };
+    const progressDataCardsRest = deckNotToLern.map((item) => {
+      return {
+        id: item.id,
+        repeatDate: item.repeatDate,
+        status: item.status,
+      };
     });
 
-    progressDataCards = [...repetedCardsData, ...unusedCardsData];
+    const progressDataCards = [
+      ...progressDataCardsRepeated,
+      ...progressDataCardsRest,
+    ];
+
+    progressDataCards.sort((a, b) => {
+      return a.id - b.id;
+    });
 
     const progressData = {
       lastRepeat: today,
       cards: progressDataCards,
     };
 
-    saveProgressDataToFile("kuba", "test", progressData);
+    console.log("progres do pliku");
+    console.table(progressDataCards);
+    console.log(progressData);
+    //saveProgressDataToFile("kuba", "test", progressData);
   }
 
   function endRound(newToRepeat) {
     props.openStatement({
       status: "success",
-      text: `Dziś przerobiłeś ${rootDeck.length} słów, nie wiedziałeś ${newToRepeat.length}`,
+      text: `Dziś przerobiłeś ${deckToLern.length} słów, nie wiedziałeś ${newToRepeat.length}`,
     });
 
     if (repeatCounter === 0) {
@@ -83,13 +121,13 @@ export default function Lern(props) {
     }
   }
 
-  if (rootDeck) {
+  if (deckToLern) {
     const deck =
       toRepeat.length > 0
-        ? rootDeck.filter((item) => {
+        ? deckToLern.filter((item) => {
             return toRepeat.includes(item.id);
           })
-        : rootDeck;
+        : deckToLern;
     return (
       <LerningRound deck={deck} deckLength={deck.length} endRound={endRound} />
     );
