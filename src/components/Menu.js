@@ -42,7 +42,7 @@ function MenuList(props) {
             props.choosePage("edit");
           }}
         >
-          Edytuj talie
+          Edytuj talię
         </div>
         <div
           onClick={() => {
