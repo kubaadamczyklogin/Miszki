@@ -8,6 +8,7 @@ export default function Home(props) {
   ];
   const toDo = [
     'Wiele talii (na razie jest tylko jedna "test")',
+    "Import, export talii",
     "Strona spisu talii z danymi o postępie",
     "Ładna strona główna",
     "Możliwość logowania różnych użytkowników",
